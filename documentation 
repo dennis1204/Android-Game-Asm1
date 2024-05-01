@@ -1,0 +1,60 @@
+Game Overview
+The game is a platformer where the player navigates through various levels, avoiding enemies and collecting coins. It includes background music and sound effects to enhance the player experience.
+Features Implemented
+1. Player Mechanics
+    * Movement: Players can move horizontally and have the ability to jump.
+    * Flying: Players can activate a jetpack to fly temporarily.(Press UP)
+    * Shooting: Players can shoot projectiles to destroy enemies or interact with the environment.(Press RIGHT)
+2. Enemy Mechanics
+    * Types of Enemies: There are multiple types of enemies (e.g., Type1 always on the ground).
+    * Behaviors: Each type of enemy has unique behaviors and movement patterns.
+    * Collisions: Enemies react to collisions with projectiles by playing a dying animation.
+3. Coin Collection
+    * Placement: Coins are placed at various positions and heights throughout the levels.
+    * Collection Mechanics: Players collect coins by moving over them.
+4. Graphics and UI
+    * Backgrounds: Parallax scrolling backgrounds enhance the depth of the game scenes.
+    * UI Components: Includes pause and restart buttons, and a toggle button for sound.
+    * Animation: Smooth animations for player and enemy movements, interactions, and transitions.
+5. Audio
+    * Background Music: Looping background music that can be toggled on/off.
+    * Sound Effects: Sound effects for jumping, collecting coins, shooting, and enemy collisions.
+6. Game Controls
+    * Keyboard and Touch: Support for both keyboard and touch input for player movement and actions.
+7. Pause and Restart Functionality
+    * Pause Game: Players can pause and resume the game.
+    * Restart Game: A restart button allows players to start over from the beginning.
+8. Adaptive Game Environment
+    * Responsive Design: Game elements adjust based on screen size and device orientation.
+Technologies Used
+* LibGDX Framework: Used for game development, providing tools for graphics rendering, sound management, input handling, and screen management.
+* Java Programming Language: Used for all game logic and LibGDX framework interaction.
+Component Breakdown
+1. GameScreen Class
+    * Handles the main game loop, rendering, and updates.
+    * Manages all game objects like player, enemies, and coins.
+    * Controls the game state, including pausing and restarting.
+2. Player Class
+    * Manages player state, including position, velocity, and animations.
+    * Handles input for movements and actions.
+    * Controls collision detection and responses.
+3. Enemy Class
+    * Differentiates enemy behavior based on type.
+    * Manages animations and state changes from alive to dying.
+4. Coins Class
+    * Tracks position and collects state.
+    * Handles animations for spinning coins.
+5. UI Controls
+    * Implements buttons for pausing, restarting, and toggling sound.
+    * Manages overlays for game paused and game over scenarios.
+6. Music and Sound Effects
+    * Manages loading, playing, pausing, and stopping of background music and sound effects.
+7.Score System:
+    * Development of a scoring system based on time and coins collected.
+Future Enhancements
+* Level Design: Introduction of more complex and varied level designs.
+* New Enemy Types: Incorporation of additional enemy types with unique behaviors.
+* Power-Ups: Implementation of power-ups to enhance player abilities temporarily.
+* Leaderboard: Online leaderboard for competitive play.
+Conclusion
+This documentation provides an overview of the current game's features and setup. It serves as a foundation for future enhancements and maintenance. The modular design allows for easy updates and expansions to game components.

@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -16,6 +17,8 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -24,7 +27,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.badlogic.gdx.audio.Music;
-public class GameScreen implements Screen {
+public class GameScreen implements Screen{
     private MyGdxGame game;
     private SpriteBatch batch;
     private Texture background, background1;
@@ -44,6 +47,11 @@ public class GameScreen implements Screen {
     private ImageButton restartButton;
     private boolean isPaused = false;
     private Music backgroundMusic;
+    private int currentScore = 0;
+    private int highScore = 0;
+    private Label scoreLabel;
+    private Label highScoreLabel;
+
     public GameScreen (MyGdxGame game) {
         this.game = game;
         batch = new SpriteBatch();
@@ -73,14 +81,52 @@ public class GameScreen implements Screen {
         enemy1 = new Enemy(game, new Vector2(screenWidth + 100, 0), Enemy.Type.TYPE1);
         enemy2 = new Enemy(game, new Vector2(screenWidth + 300, 200), Enemy.Type.TYPE2);
         enemy3 = new Enemy(game, new Vector2(screenWidth + 500, 0), Enemy.Type.TYPE3);
-        coins = new Coins(game, new Vector2(screenWidth + 200, 300));
+        coins = new Coins(this, new Vector2(screenWidth + 200, 300));
 
+        highScore = loadHighScore();
         restartBtnUI();
         createPauseButton();
         loadMusic();
         createMusicToggleButton();
-//        loadMusic();
+        // Setup UI for displaying scores
+        setupScoreDisplay();
     }
+    private void setupScoreDisplay() {
+        Label.LabelStyle labelStyle = new Label.LabelStyle();
+        labelStyle.font = new BitmapFont(); // Or use your preferred font
+        labelStyle.font.getData().setScale(3.0f);
+        scoreLabel = new Label("Score: "+ currentScore, labelStyle);
+        highScoreLabel = new Label("Highest Score: " + highScore, labelStyle);
+
+        Table table = new Table();
+        table.top().right();
+        table.setFillParent(true);
+
+        table.padRight(20).padTop(10);
+
+        table.add(highScoreLabel).padTop(10);
+        table.row();
+        table.add(scoreLabel).padTop(10);
+
+        stage.addActor(table);
+    }
+    public void addScore(int value) {
+        currentScore += value;
+        scoreLabel.setText("Score: " + currentScore);
+        if (currentScore > highScore) {
+            highScore = currentScore;
+            highScoreLabel.setText("Highest Score: " + highScore);
+            saveHighScore(highScore);
+        }
+    }
+    private int loadHighScore() {
+        return Gdx.app.getPreferences("MyPreferences").getInteger("highScore", 0);
+    }
+
+    private void saveHighScore(int score) {
+        Gdx.app.getPreferences("MyPreferences").putInteger("highScore", score).flush();
+    }
+
     private void loadMusic() {
         backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/bgMusic1.wav"));
         backgroundMusic.setLooping(true);  // Set the music to loop
@@ -110,12 +156,15 @@ public class GameScreen implements Screen {
         Gdx.input.setInputProcessor(stage);
     }
     private void restartGame() {
-        // Logic to reset the game
+        // Logic to reset the game elements
         player.reset();
         enemy1.reset();
         enemy2.reset();
         enemy3.reset();
         coins.reset();
+        // Reset the score
+        currentScore = 0;
+        scoreLabel.setText("Score: " + currentScore); // Update the score label to reflect the reset
         restartButton.setVisible(false);
     }
     private void createPauseButton() {
@@ -123,7 +172,7 @@ public class GameScreen implements Screen {
         Drawable pauseDrawable = new TextureRegionDrawable(new TextureRegion(pauseBtnTexture));
 
         ImageButton pauseButton = new ImageButton(pauseDrawable);
-        pauseButton.setPosition(20, viewport.getWorldHeight() - 100); // Top-left corner
+        pauseButton.setPosition(20, viewport.getWorldHeight() - 140); // Top-left corner
         pauseButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -145,7 +194,7 @@ public class GameScreen implements Screen {
         musicToggleButton.setChecked(false);
 
         // Positioning the button
-        musicToggleButton.setPosition(140, viewport.getWorldHeight() - 100);
+        musicToggleButton.setPosition(140, viewport.getWorldHeight() - 140);
 
         // Add listener to handle toggle behavior
         musicToggleButton.addListener(new ChangeListener() {
@@ -184,7 +233,7 @@ public class GameScreen implements Screen {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         // Optionally draw collision bounding boxes
         shapeRenderer.end();
-        stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
+        stage.act(delta);
         stage.draw();
     }
 
@@ -313,7 +362,7 @@ public class GameScreen implements Screen {
         multiplexer.addProcessor(stage); // Add the stage first to capture UI interactions
         multiplexer.addProcessor(player); // Then add the player to handle game inputs
         Gdx.input.setInputProcessor(multiplexer);
-//        backgroundMusic.play();
+        backgroundMusic.play();
     }
 
 

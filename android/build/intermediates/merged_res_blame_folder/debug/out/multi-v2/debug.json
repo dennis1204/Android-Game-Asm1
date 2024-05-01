@@ -4,7 +4,7 @@
             "outputFile": "com.mygdx.game.android-merged_res-4:/values-v21_values-v21.arsc.flat",
             "map": [
                 {
-                    "source": "/Users/dennislaw/Documents/INFT3034/Assignment1/android/res/values-v21/styles.xml",
+                    "source": "/Users/dennislaw/Documents/Android-Game-Asm1/android/res/values-v21/styles.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
@@ -20,24 +20,7 @@
             "outputFile": "com.mygdx.game.android-merged_res-4:/values_values.arsc.flat",
             "map": [
                 {
-                    "source": "/Users/dennislaw/Documents/INFT3034/Assignment1/android/res/values/strings.xml",
-                    "from": {
-                        "startLines": "3",
-                        "startColumns": "4",
-                        "startOffsets": "56",
-                        "endColumns": "48",
-                        "endOffsets": "100"
-                    },
-                    "to": {
-                        "startLines": "3",
-                        "startColumns": "4",
-                        "startOffsets": "111",
-                        "endColumns": "48",
-                        "endOffsets": "155"
-                    }
-                },
-                {
-                    "source": "/Users/dennislaw/Documents/INFT3034/Assignment1/android/res/values/styles.xml",
+                    "source": "/Users/dennislaw/Documents/Android-Game-Asm1/android/res/values/styles.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
@@ -56,7 +39,24 @@
                     }
                 },
                 {
-                    "source": "/Users/dennislaw/Documents/INFT3034/Assignment1/android/res/values/color.xml",
+                    "source": "/Users/dennislaw/Documents/Android-Game-Asm1/android/res/values/strings.xml",
+                    "from": {
+                        "startLines": "3",
+                        "startColumns": "4",
+                        "startOffsets": "56",
+                        "endColumns": "48",
+                        "endOffsets": "100"
+                    },
+                    "to": {
+                        "startLines": "3",
+                        "startColumns": "4",
+                        "startOffsets": "111",
+                        "endColumns": "48",
+                        "endOffsets": "155"
+                    }
+                },
+                {
+                    "source": "/Users/dennislaw/Documents/Android-Game-Asm1/android/res/values/color.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

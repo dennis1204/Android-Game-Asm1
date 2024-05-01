@@ -10,7 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 import java.util.Random;
 public class Coins implements CollidableObject{
     private MyGdxGame game;
-
+    private GameScreen gameScreen;
     private Texture[] texture;
     private Texture[] explosion;
 
@@ -21,14 +21,13 @@ public class Coins implements CollidableObject{
     private float frame = 0;
 
 
-    enum State {ALIVE, DYING, DEAD}
-
-    private Enemy.State enemyState;
+    enum State { NOT_COLLECTED, COLLECTED }
+    private State state;
     private Random random = new Random();
     public void reset() {
         // Reset position and collected state
         this.position.set(Gdx.graphics.getWidth() + 200, calculateRandomHeight());
-        this.enemyState = Enemy.State.ALIVE;
+        this.state = State.NOT_COLLECTED;
     }
 
     private float calculateRandomHeight() {
@@ -38,8 +37,9 @@ public class Coins implements CollidableObject{
         return (float) (Math.random() * (maxHeight - minHeight) + minHeight);
     }
 
-    public Coins(MyGdxGame game, Vector2 initialPosition){
-        this.game = game;
+    public Coins(GameScreen gameScreen, Vector2 initialPosition){
+//        this.game = game;
+        this.gameScreen = gameScreen;
         this.position =  new Vector2(initialPosition.x, calculateRandomHeight()); // Set initial y to a random height
         this.texture = new Texture[8];
         for (int i = 0 ; i < 8; i++) {
@@ -49,7 +49,7 @@ public class Coins implements CollidableObject{
         for (int i = 0 ; i < 7; i++) {
             this.explosion[i] = new Texture("PNG/Collision FX/02/" + (i+1) + ".png");
         }
-        this.enemyState = Enemy.State.ALIVE;
+        this.state = State.NOT_COLLECTED;
     }
     public void resetPosition() {
         this.position.set(Gdx.graphics.getWidth() + 200, calculateRandomHeight());  // Reset x to the right of the screen and y to a random height
@@ -59,18 +59,18 @@ public class Coins implements CollidableObject{
 
         this.position.add(new Vector2(this.speed * dt, 0));
 
-        if (this.enemyState == Enemy.State.ALIVE){
+        if (this.state == State.NOT_COLLECTED){
             this.frame += 20 * dt;
             if (this.frame >= 8) {
                 this.frame = 0;
             }
         }
 
-        if (this.enemyState == Enemy.State.DYING){
+        if (this.state == State.COLLECTED){
             this.frame += 20 * dt;
             if (this.frame >= explosion.length) {
                 this.frame = 0;
-                this.enemyState = Enemy.State.ALIVE;
+                this.state = State.NOT_COLLECTED;
                 resetPosition();
             }
         }
@@ -81,9 +81,9 @@ public class Coins implements CollidableObject{
 
     }
     public void render(SpriteBatch batch) {
-        if (this.enemyState == Enemy.State.ALIVE) {
+        if (this.state == State.NOT_COLLECTED) {
             batch.draw(this.texture[(int) this.frame], this.position.x, this.position.y);
-        } else if (this.enemyState == Enemy.State.DYING) {
+        } else if (this.state == State.COLLECTED) {
             batch.draw(this.explosion[(int)this.frame], this.position.x - 75, this.position.y - 75);
         }
 
@@ -99,9 +99,11 @@ public class Coins implements CollidableObject{
 
     @Override
     public void handleCollision() {
-        if (this.enemyState == Enemy.State.ALIVE) {
-            this.enemyState = Enemy.State.DYING;
+        if (this.state == State.NOT_COLLECTED) {
+            Gdx.app.log("Collision", "Coin collected");
+            this.state = State.COLLECTED;
             this.frame = 0;
+            gameScreen.addScore(1);
         }
     }
 }
